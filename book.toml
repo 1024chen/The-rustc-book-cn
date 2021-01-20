@@ -1,0 +1,10 @@
+[book]
+title = "rustc 手册"
+description = "rustc 手册, The rustc book，rustc 手册 中文版"
+author = "The Rust Project Developers"
+translator = "1024chen"
+language = "zh-CN"
+
+[output.html.playpen]
+editable = true
+editor = "ace"
