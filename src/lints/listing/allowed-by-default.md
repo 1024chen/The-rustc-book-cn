@@ -4,7 +4,7 @@
 
 ## absolute_paths_not_starting_with_crate
 
-`absolute_paths_not_starting_with_crate` lint 检测完全合乎“路径以模块名称开头”的这个要求，即以 `crate` , `self` ，或是以一个 extern crate 名称作为开头。
+`absolute_paths_not_starting_with_crate` lint 检测完全合乎“路径以模块名称开头”的这个要求，即以 `crate` , `self` ，或是以一个 extern crate 名称作为开头。<br>
 
 **样例**
 
@@ -33,7 +33,7 @@ note: the lint level is defined here
 1 | #![deny(absolute_paths_not_starting_with_crate)]
   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in the 2018 edition!
-  = note: for more information, see issue #53130 <https://github.com/rust-lang/rust/issues/53130>
+  = note: for more information, see issue #53130 <https://github.com/rust-lang/rust/issues/53130><br>
 ```
 
 **解释**
@@ -46,7 +46,8 @@ Rust [语义版本][edition_guide]允许语言向前发展而不破坏其向后�
 
 ## anonymous-parameters
 
-此 lint 检测匿名参数。一些触发此 lint 的示例代码：
+此 lint 检测匿名参数。一些触发此 lint 的示例代码：<br>
+
 **样例**
 
 ```rust
@@ -76,6 +77,7 @@ note: the lint level is defined here
   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in the 2018 edition!
   = note: for more information, see issue #41686 <https://github.com/rust-lang/rust/issues/41686>
 ```
+<br>
 **解释**
 
 这种语法大多是历史意外，可以通过添加 `_` 模式（译者注：通配符）或描述性标识符很轻松地解决：
@@ -89,7 +91,7 @@ trait Foo {
 
 ## box-pointers
 
-`box_pointers` lint 用于 Box 类型。
+`box_pointers` lint 用于 Box 类型。<br>
 
 **样例**
 
@@ -116,6 +118,7 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^
 
 ```
+<br>
 **解释**
 
 这种 lint 主要是历史性的，并不是特别有用。以前 `Box<T>`是用于构建语言，以及进行堆分配的唯一方法。今天的 Rust 可以调用其他堆分配器等。
@@ -124,6 +127,7 @@ note: the lint level is defined here
 ## elided-lifetimes-in-paths
 
 `elided_lifetimes_in_paths` lint 用于检测隐藏生命周期参数。
+<br>
 **样例**
 
 ```rust
@@ -150,6 +154,7 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ```
+<br>
 **解释**
 
 省略的生命周期参数可能使您一眼就看不到发生了借用。该 lint 确保生命周期参数总是被显式指出，即便是`_` [占位符的生命周期](https://doc.rust-lang.org/reference/lifetime-elision.html#lifetime-elision-in-functions)。
@@ -158,8 +163,7 @@ note: the lint level is defined here
 
 ## explicit-outlives-requirements
 `explicit_outlives_requirements` lint 检测指出不必要的生命周期约束（bounds）。
-
-
+<br>
 
 **样例**
 
@@ -191,6 +195,7 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ```
+<br>
 **解释**
 
 如果结构体包含引用，例如 `&'a T`，编译器要求 `T` 的生命周期长度比 `'a` 更久。以往要求写上明确的生命周期约束（ bound ）来此满足此条件。然而，这可能过于明显，且会导致混乱和不必要的复杂性。语言已经改进为如果没有指定则会自动推断约束。具体举例来说，如果结构体包含引用，直接或间接地包含 `T` 和生命周期 `'x` ，则它会自动推断要求（requirement） `T: 'x`。
@@ -202,7 +207,7 @@ note: the lint level is defined here
 
 ## keyword-idents
 `keyword-idents` lint 检测被用作标识符的版本关键字。
-
+<br>
 **样例**
 
 ```rust
@@ -227,7 +232,7 @@ note: the lint level is defined here
   = note: for more information, see issue #49716 <https://github.com/rust-lang/rust/issues/49716>
 
 ```
-
+<br>
 **解释**
 
 Rust [语义版本][edition_guide]允许语言向前发展而不破坏其向后兼容性。此 lint 捕获代码中的被用作标识符（例如变量名、函数名等等）的新增关键。如果你没有更新代码就切换编译器到一个新语义版本，就会在你将新关键字作为标识符的情况下编译失败。
@@ -238,7 +243,7 @@ Rust [语义版本][edition_guide]允许语言向前发展而不破坏其向后�
 
 ## macro-use-extern-crate
 `macro-use-extern-crate` lint 用于检测 [`macro_use`](https://doc.rust-lang.org/reference/macros-by-example.html#the-macro_use-attribute)属性的使用
-
+<br>
 **样例**
 
 ```rust
@@ -267,13 +272,14 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^^
 
 ```
+<br>
 **解释**
 
 [`macro_use`](https://doc.rust-lang.org/reference/macros-by-example.html#the-macro_use-attribute)属性放在 `extern crate` 项上使其宏可被使用，而这个外部 crate 可能会被放进该 crate 的路径前缀，导致导入宏在作用域内无处不在。在 [2018 版本][2018 edition]中致力于简化依赖项的处理，`extern crate` 的使用已经淘汰了。要将宏从外部 crate 导入作用域，建议使用 [`use`](https://doc.rust-lang.org/reference/items/use-declarations.html) 导入。
 
 ## meta_variable_misuse
 `meta_variable_misuse` lint 检测宏定义中可能存在的元变量滥用。
-
+<br>
 **样例**
 
 ```rust
@@ -303,7 +309,7 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^
 
 ```
-
+<br>
 **解释**
 
 [`macro_rules`](https://doc.rust-lang.org/reference/macros-by-example.html)宏有许多不恰当的定义方式，这些错误以前只有在宏被展开或根本不（ not at all ）展开时才能才能检测得到。该 lint 尝试在当定义了宏的时候捕获一些问题。
@@ -312,7 +318,7 @@ note: the lint level is defined here
 
 ## missing_copy_implementations
 `missing_copy_implementations` lint 检测潜在的忘记实现 [`Copy`][Copy trait] trait。
-
+<br>
 **样例**
 
 ```rust
@@ -338,7 +344,7 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ```
-
+<br>
 **解释**
 
 1.0版本以前，类型会被尽可能自动标记为 `Copy`。后面对此进行了更改，并要求实现 `Cpoy` trait 来明确选择添加此 trait。此更改的一部分内容是，如果未为一个可复制类型标记 `Copy`，一个 lint 会发出警告。
@@ -350,7 +356,7 @@ note: the lint level is defined here
 
 ## missing_debug_implementations
 `missing_debug_implementations` lint 检测 `fmt::Debug` 的缺失。
-
+<br>
 **样例**
 
 ```rust
@@ -372,14 +378,25 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ```
-
+<br>
 **解释**
+
+在类型上实现 `Debug` 有助于调试。因为它提供了个格式化和显示值的便捷方法。 使用  `#[derive(Debug)]` 属性会自动生成一个典型实现，或者手动实现该 `Debug` trait 添加自定义实现。
+
+
+
+该 lint 默认等级为 “allow” ，因为添加 `Debug` 到所有类型可能会对编译时长和代码体积产生负面作用。它还要求对每种类型都添加样板，这有时会是种（编码上的）阻碍。
+
+
+
 
 ## missing_doc_code_examples
 `missing_doc_code_examples` lint 检测文档中缺失代码样例的公开导出项。这是一个仅用于 `rustdoc` 的 lint，请参阅 [rustdoc book](https://doc.rust-lang.org/rustdoc/lints.html#missing_doc_code_examples) 中的文档。
 
 ## missing_docs
 `missing_docs` lint 检测缺失文档的公有项目。(译者注：`missing_docs` 与  `missing_doc_code_examples` ，一个检测有没有，一个检测文档有没有代码样例)
+
+<br>
 
 **样例**
 
@@ -413,6 +430,8 @@ note: the lint level is defined here
 ## non_ascii_idents
 `non_ascii_idents` lint 检测非 ascii 标识符。
 
+<br>
+
 **样例**
 
 ```rust
@@ -437,12 +456,16 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^
 
 ```
+<br>
+
 **解释**
 
 在稳定版的 Rust 上，标识符必须包含 ASCII 字符。 `non_ascii_idents` 只在 nightly feature 允许标识符包含非 ASCII 字符。该 lint 允许项目希望切换该 lint 等级为 “forbid” 以保持只使用 ASCII 字符的限制（例如，简化协作或是为了安全）。更多细节请参阅 [RFC 2457](https://github.com/rust-lang/rfcs/blob/master/text/2457-non-ascii-idents.md)。
 
 ## pointer_structural_match
 `pointer_structural_match` lint 检测那些在不同编译器版本和优化级别依赖上不能用于模式中的指针。
+
+<br>
 
 **样例**
 
@@ -475,6 +498,8 @@ note: the lint level is defined here
   = note: for more information, see issue #62411 <https://github.com/rust-lang/rust/issues/70861>
 ```
 
+<br>
+
 **解释**
 
 早期 Rust 版本允许在模式中使用函数指针和泛（wide）原始指针。尽管许多情况下可以按用户期望的方式运行，但由于编译器进行优化，在运行时，指针可能已经 “不等于自身” 或者是指向不同函数的函数指针相等。这是因为如果函数体相等， LLVM 会优化掉重复函数（译者注：即保留一个），因此也会使得这些指向他们的函数指针指向同一位置。另外，如果重复的函数在不同 crate 中，且又没有通过 LTO 进行优化（删除相同代码数据），那么就会造成重复。
@@ -484,6 +509,8 @@ note: the lint level is defined here
 
 ## single_use_lifetimes
 `single_use_lifetimes` lint 检测只使用一次的生命期。
+
+<br>
 
 **样例**
 
@@ -513,14 +540,20 @@ help: elide the single-use lifetime
   |      --   --
 
 ```
+<br>
+
 **解释**
 
 显式指定一个生命周期，例如在函数或 `impl` 中的 `'a`应该用来链接这两者。否则，应该使用 `'_` 表明生命周期并未链接到两者，或者如果有可能的话干脆直接省略生命周期。
 
 该 lint 默认等级为 “allow” ，因为它是在 `'_` 和省略生命周期第一次被引入的时候引入的，而且这个 lint 可能会有很多干扰（ too noisy ）。此外，它还会产生一些已知的误报，了解历史内容请参阅 [RFC 2115](https://github.com/rust-lang/rfcs/blob/master/text/2115-argument-lifetimes.md)，更多细节请参阅 [issue #44752](https://github.com/rust-lang/rust/issues/44752)
 
+
+
 ## trivial_casts
 `trivial_casts` lint 检测可以被强制类型转换替代的平凡类型转换，这可能需要[类型归因](https://github.com/rust-lang/rust/issues/23416)（type ascription）或临时变量。
+
+<br>
 
 **样例**
 
@@ -545,6 +578,8 @@ note: the lint level is defined here
   = help: cast can be replaced by coercion; this might require a temporary variable
 
 ```
+<br>
+
 **解释**
 
 平凡类型转换是一种 `e` 含有 `U` 类型，而且 `U` 是 `T` 的一个子类型的 `e as T` 转换。这种类型转换通常是不必要的，其通常可以被推断出来。
@@ -553,6 +588,8 @@ note: the lint level is defined here
 
 ## trivial_numeric_casts
 `trivial_numeric_casts` lint 检测可能已经被移除的平凡数值类型转换。
+
+<br>
 
 **样例**
 
@@ -575,6 +612,8 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^^^^^^^^^^^
   = help: cast can be replaced by coercion; this might require a temporary variable
 ```
+<br>
+
 **解释**
 
 平凡数值类型转换指的是将数值类型转换为相同数值类型的转换。这种转换通常是不必要的。
@@ -583,6 +622,8 @@ note: the lint level is defined here
 
 ## unaligned_references
 `unaligned_references` lint 检测对包装结构体字段的未对其引用。
+
+<br>
 
 **样例**
 
@@ -618,13 +659,18 @@ note: the lint level is defined here
    = note: fields of packed structs are not properly aligned, and creating a misaligned reference is undefined behavior (even if that reference is never dereferenced)
 
 ```
+<br>
+
 **解释**
 
 创建对未充分对其的包装字段的引用是一种[未定义的行为](https://doc.rust-lang.org/reference/behavior-considered-undefined.html)并且应该被禁止。
 默认情况下，此 lint 等级为 “allow” ，因为没有稳定的替代方法，并且尚不确定现有代码将如何触发此 lint 。有关更多讨论请参阅 [issue #27060](https://github.com/rust-lang/rust/issues/27060) 。
 
 ## unreachable_pub
-`unreachable_pub` lint 触发无法从 crate 根到达的 pub 项。
+`unreachable_pub` lint 被无法从 crate 根到达的 pub 项所触发。
+
+<br>
+
 **样例**
 
 ```rust
@@ -653,14 +699,18 @@ note: the lint level is defined here
   = help: or consider exporting it for use by other crates
 
 ```
+<br>
+
 **解释**
 
-一个裸（ bare ） pub 项的可见性可能会因为该项无法从 crate 导出而被误导。该 `pub(crate)` 可见性建议用仅可见性仅在其自身 crate 这种清晰的表达来替代。
+一个裸（ bare ） pub 项的可见性可能会因为该项无法从 crate 导出而被误导。该 `pub(crate)` 可见性建议用可见性仅在其自身 crate 这种清晰的表达来替代。
 
-默认情况下，此 lint 等级为 “allow” ，因为它会触发大量现有的 Rust 代码，并且会有一些误报。最终我们希望它成为一个默认警告。
+默认情况下，此 lint 等级为 “allow” ，因为它会被大量现有的 Rust 代码触发，并且会有一些误报。最终我们希望它成为一个默认警告。
 
 ## unsafe_code
 `unsafe_code` lint 捕捉 `unsafe` 代码的使用。
+
+<br>
 
 **样例**
 
@@ -689,13 +739,16 @@ note: the lint level is defined here
   |         ^^^^^^^^^^^
 
 ```
+<br>
+
 **解释**
 
 该 lint 意在限制 `unsafe` 的使用，这很难被正确使用。（译者注：此处的“很难被正确使用”，一者指的是 unsafe 代码的不安全操作，一者指的是对 unsafe 代码的严格限制 lint 很难说是正确的）。
 
 ## unsafe_op_in_unsafe_fn
-`unsafe_op_in_unsafe_fn` lint 检测非 unsafe 块中
- unsafe 函数中的 unsafe 操作。该 lint 仅在  [nightly 通道](https://doc.rust-lang.org/book/appendix-07-nightly-rust.html)( nightly channel )中使用`#![feature(unsafe_block_in_unsafe_fn)]`时有效。
+`unsafe_op_in_unsafe_fn` lint 检测非 unsafe 块中 unsafe 函数中的 unsafe 操作。该 lint 仅在  [nightly 通道](https://doc.rust-lang.org/book/appendix-07-nightly-rust.html)( nightly channel )中使用`#![feature(unsafe_block_in_unsafe_fn)]`时有效。
+
+<br>
 
 **样例**
 
@@ -728,6 +781,8 @@ note: the lint level is defined here
   = note: consult the function's documentation for information on how to avoid undefined behavior
 
 ```
+<br>
+
 **解释**
 
 当前，unsafe 函数允许在其中进行任何的 unsafe 操作。然而，这可能会因为需要对代码行为进行适当仔细的检查而增加代码体积。 `unsafe` 块提供了一种简便的，可以清楚说明代码的哪部分正在进行 unsafe 操作。在未来，我们希望修改它以便不能在一个非 unsafe 块的 `unsafe 函数`中执行 unsafe 操作。
@@ -765,7 +820,7 @@ note: the lint level is defined here
 该 lint 默认等级为 “allow” ，因为根据构建系统的配置不同可能会产生误报。例如，当使用 Cargo 时，一个 “包”（“package”）包含了多个 crate （例如一个库 crate 和一个二进制 crate ），但是这个包的依赖是为整体而定义的，如果有一个依赖仅在二进制 crate 中使用，在库 crate 中未使用，那么该 lint 将会在库（译者注：在库 crate 运行的时候）错误地被发出。
 
 ## unused_extern_crates
-`unused_extern_crates` lint 谨防从未被使用的 `extern crate` 项。
+`unused_extern_crates` lint 防止从未被使用的 `extern crate` 项。
 
 **样例**
 
@@ -922,7 +977,7 @@ note: the lint level is defined here
 ```
 **解释**
 
-忽略的函数返回值可能会表明一个错误。在可以确定使用 result 的情况下推荐使用 [`must_use`](https://doc.rust-lang.org/reference/attributes/diagnostics.html#the-must_use-attribute)属性来注解函数。如果不使用此类返回值将会触发默认为警告级别的 `unused_must_use` lint。`unused_results` lint 本质上是一样的，但是其被所有的返回值触发。
+忽略的函数返回值可能会指出一个错误。在可以确定使用 result 的情况下推荐使用 [`must_use`](https://doc.rust-lang.org/reference/attributes/diagnostics.html#the-must_use-attribute)属性来注解函数。如果不使用此类返回值将会触发默认为警告级别的 `unused_must_use` lint。`unused_results` lint 本质上是一样的，但是其被所有的返回值触发。
 
 该 lint 默认等级为 “allow” ，因为其可能会带来干扰，且可能并不是一个真正的问题。例如，调用 `Vec` 或 `HashMap` 的  `remove` 方法会返回先前的值（译者注：也就是已经被 remove 的那个值），你可能并不关心这个值，使用这个 lint 将会要求显式地忽略或丢弃这些值。
 
@@ -956,7 +1011,7 @@ note: the lint level is defined here
 
 向枚举中添加一个比其他变量大得多的变量可能是个错误，这会增加所有变量所需空间的总大小。这可能会影响性能和内存使用。如果第一大的变量比第二大的变量所需空间大三倍以上，就会触发这个 lint。
 
-可以考虑将较大变量的内容放在堆上（例如通过 Box ），以保持枚举体整体大小处在较小量上。
+可以考虑将较大变量的内容放在堆上（例如通过 [`Box`](https://doc.rust-lang.org/std/boxed/index.html) ），以保持枚举体自身大小处于较小量值 。
 
 该 lint 默认等级为 “allow” ，因为其可能会造成干扰，且可能并不是一个真正的问题。应通过基准测试和分析指导来考虑这个问题。
 
