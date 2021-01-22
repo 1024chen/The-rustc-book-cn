@@ -7,8 +7,5 @@
 
 本书阅读地址：
 
-[Github](https://1024chen.github.io/)
+[Gitee](http://chen0adapter.gitee.io/rustc-book-cn)
 
-
-
-国内访问加速：

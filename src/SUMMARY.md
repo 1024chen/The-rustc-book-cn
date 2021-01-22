@@ -17,5 +17,6 @@
     - [自定义 Targets](targets/custom.md)
     - [已知问题](targets/known-issues.md)
 - [PGO](profile-guided-optimization.md)
-- [Linker-plugin based LTO](linker-plugin-lto.md)
+- [基于 LTO 的链接器插件](linker-plugin-lto.md)
 - [为 `rustc` 做贡献](contributing.md)
+
