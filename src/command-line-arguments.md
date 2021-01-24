@@ -74,7 +74,7 @@ ATTR_NAME:LINK_NAME` 形式覆盖，其中  `ATTR_NAME` 是 `link` 属性中的�
 这将告知 `rustc` 您的 crate 的名称。
 
 <a id="option-edition"></a>
-## `--edition`: 指定使用的语义版本
+## `--edition`: 指定使用的edition 版次
 
 该标签值为 `2015` 或 `2018`。 默认为 `2015`。 更多关于版本的信息可以在 [版本指南][edition guide]中找到。
 
