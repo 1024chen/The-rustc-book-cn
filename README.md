@@ -9,3 +9,6 @@
 
 [Gitee](http://chen0adapter.gitee.io/rustc-book-cn)
 
+
+
+[上海服务器结点加速](http://chen0adapter.top/books/rustc_book_cn/index.html)

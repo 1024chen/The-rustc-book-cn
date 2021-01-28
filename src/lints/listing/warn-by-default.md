@@ -1,7 +1,5 @@
 # Warn-by-default lints
 
-（译者注：本章尚未翻译） 
-
 这些 lint 的默认等级被设置为 “警告”。
 
 + [`array_into_iter`](#array_into_iter)
