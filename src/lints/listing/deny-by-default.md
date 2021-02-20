@@ -2,25 +2,26 @@
 
 默认情况下，这些 lint 都设置为 'deny' 级别。
 
-- [`ambiguous_associated_items`](#ambiguous_associated_items)
-- [`arithmetic_overflow`](#arithmetic_overflow)
-- [`conflicting_repr_hints`](#conflicting_repr_hints)
-- [`const_err`](#const_err)
-- [`ill_formed_attribute_input`](#ill_formed_attribute_input)
-- [`incomplete_include`](#incomplete_include)
-- [`invalid_type_param_default`](#invalid_type_param_default)
-- [`macro_expanded_macro_exports_accessed_by_absolute_paths`](#macro_expanded_macro_exports_accessed_by_absolute_paths)
-- [`missing_fragment_specifier`](#missing_fragment_specifier)
-- [`mutable_transmutes`](#mutable_transmutes)
-- [`no_mangle_const_items`](#no_mangle_const_items)
-- [`order_dependent_trait_objects`](#order_dependent_trait_objects)
-- [`overflowing_literals`](#overflowing_literals)
-- [`patterns_in_fns_without_body`](#patterns_in_fns_without_body)
-- [`pub_use_of_private_extern_crate`](#pub_use_of_private_extern_crate)
-- [`soft_unstable`](#soft_unstable)
-- [`unconditional_panic`](#unconditional_panic)
-- [`unknown_crate_types`](#unknown_crate_types)
-- [`useless_deprecated`](#useless_deprecated)
+- [默认等级为拒绝的 lints](#默认等级为拒绝的-lints)
+  - [ambiguous_associated_items](#ambiguous_associated_items)
+  - [arithmetic_overflow](#arithmetic_overflow)
+  - [conflicting_repr_hints](#conflicting_repr_hints)
+  - [const_err](#const_err)
+  - [ill_formed_attribute_input](#ill_formed_attribute_input)
+  - [incomplete_include](#incomplete_include)
+  - [invalid_type_param_default](#invalid_type_param_default)
+  - [macro_expanded_macro_exports_accessed_by_absolute_paths](#macro_expanded_macro_exports_accessed_by_absolute_paths)
+  - [missing_fragment_specifier](#missing_fragment_specifier)
+  - [mutable_transmutes](#mutable_transmutes)
+  - [no_mangle_const_items](#no_mangle_const_items)
+  - [order_dependent_trait_objects](#order_dependent_trait_objects)
+  - [overflowing_literals](#overflowing_literals)
+  - [patterns_in_fns_without_body](#patterns_in_fns_without_body)
+  - [pub_use_of_private_extern_crate](#pub_use_of_private_extern_crate)
+  - [soft_unstable](#soft_unstable)
+  - [unconditional_panic](#unconditional_panic)
+  - [unknown_crate_types](#unknown_crate_types)
+  - [useless_deprecated](#useless_deprecated)
 
 
 
@@ -209,6 +210,7 @@ error: attribute must be of the form `#[inline]` or `#[inline(always|never)]`
   = note: for more information, see issue #57571 <https://github.com/rust-lang/rust/issues/57571>
 
 ```
+
 **解释**  
 
 以前，许多内置属性的输入没有经过验证，无意义的属性输入被接收。在添加了验证之后，明确了一些现有的项目使用了这些无效的格式。这是个[将来不兼容][future-incompatible] 的 lint ，将来会转化为固有错误。更多细节请参阅 [issue #57571](https://github.com/rust-lang/rust/issues/57571) 。
@@ -218,6 +220,7 @@ error: attribute must be of the form `#[inline]` or `#[inline(always|never)]`
 `incomplete_include` lint 检测一个文件包含多于一个表达式的 [`include!`][include-macro] 宏。
 
 **样例**  
+
 ```rust,igonre
 fn main() {
     include!("foo.txt");
@@ -237,6 +240,7 @@ error: include macro expected single expression in source
   |
   = note: `#[deny(incomplete_include)]` on by default
 ```
+
 **解释**  
 
 [`include!`][include-macro] 宏当前仅打算用于单个[表达式][expression]或多个[项][item]。从以前看，它会忽略第一个表达式之后的任何内容，但这可能会令人困惑。在上例中，println! 表达式（ println! expression ）刚好在分号之前结束，从而使分号成为多余的信息而被忽略，更令人惊讶的是，如果包含的文件有多个打印语句，后续的语句将被忽略!
@@ -249,7 +253,9 @@ error: include macro expected single expression in source
 
 ## invalid_type_param_default
 `invalid_type_param_default` lint 检测在无效位置中错误地允许 (allowed) 使用类型参数默认值。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -269,13 +275,16 @@ error: defaults for type parameters are only allowed in `struct`, `enum`, `type`
   = note: for more information, see issue #36887 <https://github.com/rust-lang/rust/issues/36887>
 
 ```
+
 **解释**  
 
 默认类型参数仅在某些情况下才允许使用，但是以前编译器在任何地方都允许使用。这是个[将来不兼容][future-incompatible] 的 lint ，将来会转化为固有错误。更多细节请参阅 [issue #36887](https://github.com/rust-lang/rust/issues/36887) 。
 
 ## macro_expanded_macro_exports_accessed_by_absolute_paths
 `macro_expanded_macro_exports_accessed_by_absolute_paths` lint 检测当前 crate 中不能被绝对路径引用的 [`macro_export`][macro-export]宏的宏展开。
+
 **样例**  
+
 ```rust
 macro_rules! define_exported {
     () => {
@@ -316,6 +325,7 @@ note: the macro is defined here
    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
 
 ```
+
 **解释**  
 
 我们的目的是所有使用 `#[macro_export]` 属性的宏在 crate 根是可用的。然而，当一个 `macro_rules!` 定义由另一个宏生成之时，宏展开是无法遵循该规则的。
@@ -329,6 +339,7 @@ note: the macro is defined here
 始终可以通过移除 `macro_rules!` 宏定义中未使用的模式来解决此警告。
 
 **样例**  
+
 ```rust
 macro_rules! foo {
    () => {};
@@ -352,6 +363,7 @@ error: missing fragment specifier
   = note: for more information, see issue #40107 <https://github.com/rust-lang/rust/issues/40107>
 ```
 **解释**  
+
 要修复此问题，从 `macro_rules!` 定义中移除此未使用模式：
 ```rust
 macro_rules! foo {
@@ -364,7 +376,9 @@ fn main() {
 
 ## mutable_transmutes
 `mutable_transmutes` lint 捕捉从 `&T` 到 `&mut T` 这种[未定义行为][undefined-behavior] 的转换。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -383,6 +397,7 @@ error: mutating transmuted &mut T from &T may cause undefined behavior, consider
   |
   = note: `#[deny(mutable_transmutes)]` on by default
 ```
+
 **解释**  
 
 我们对数据别名做出了一些假设，而这种转换是违反这些假设的。考虑使用 [`UnsafeCell`](https://doc.rust-lang.org/std/cell/struct.UnsafeCell.html)。
@@ -391,7 +406,9 @@ error: mutating transmuted &mut T from &T may cause undefined behavior, consider
 
 ## no_mangle_const_items
 `no_mangle_const_items` lint 检测 [`no_mangle`](https://doc.rust-lang.org/reference/abi.html#the-no_mangle-attribute)属性的所有 `const` 项。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -411,6 +428,7 @@ error: const items should never be `#[no_mangle]`
   |
   = note: `#[deny(no_mangle_const_items)]` on by default
 ```
+
 **解释**  
 
 常量没有其导出符号，因此这可能意味着你得用 [`static`][static] 而不是 [`const`][const]。
@@ -422,6 +440,7 @@ error: const items should never be `#[no_mangle]`
 `order_dependent_trait_objects` lint 检测一种 trait 一致性冲突，该冲突即为同一个包含标记 trait （marker traits）的 dynamic trait object 创建两个 trait 实现。
 
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -446,13 +465,16 @@ error: conflicting implementations of trait `main::Trait` for type `(dyn std::ma
   = note: for more information, see issue #56484 <https://github.com/rust-lang/rust/issues/56484>
 
 ```
+
 **解释**  
 
 以前的一个 bug 导致编译器将不同顺序的 trait （例如 `Send + Sync` 和 `Sync + Send`）解释为不同的类型，然而它们应该被认为是相同的。这允许代码在出现一致性错误的时候定义单独的 trait 实现。这是个[将来不兼容][future-incompatible] 的 lint ，将来会转化为固有错误。更多细节请参阅 [issue #56484](https://github.com/rust-lang/rust/issues/56484) 。
 
 ## overflowing_literals
 `overflowing_literals` lint 检测超出其所属类型范围的字面量。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -470,13 +492,16 @@ error: literal out of range for `u8`
   = note: `#[deny(overflowing_literals)]` on by default
   = note: the literal `1000` does not fit into the type `u8` whose range is `0..=255`
 ```
+
 **解释**  
 
 使用溢出其所用类型的字面量通常是错误。要么就使用在其类型范围内的字面量，要么就更改其类型以能容纳该字面量。
 
 ## patterns_in_fns_without_body
 `patterns_in_fns_without_body` lint 检测 `mut` [标识符模式][identifier-patterns]用于没有函数体的函数的参数。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -497,6 +522,7 @@ error: patterns aren't allowed in functions without bodies
   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
   = note: for more information, see issue #35203 <https://github.com/rust-lang/rust/issues/35203>
 ```
+
 **解释**  
 
 要想修复此问题， trait 定义中从参数移除 `mut` ；也可以使用默认实现。也就是说，以下两种都行：
@@ -522,6 +548,7 @@ trait 定义中可以定义没有函数体的函数以指定实现必须实现�
 `pub_use_of_private_extern_crate` lint 检测私有 `extern crate` 重导出的具体情况。
 
 **样例**  
+
 ```rust,ignore
 # #![allow(unused)]
 # fn main() {
@@ -541,6 +568,7 @@ error: extern crate `core` is private, and cannot be re-exported (error E0365), 
   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
   = note: for more information, see issue #34537 <https://github.com/rust-lang/rust/issues/34537>
 ```
+
 **解释**  
 
 一个公开的 `use` 声明不应该用于 公开性地重导出私有 `extern crate`。应该使用 `pub extern crate`。
@@ -548,7 +576,9 @@ error: extern crate `core` is private, and cannot be re-exported (error E0365), 
 
 ## soft_unstable
 `soft_unstable` lint 检测 在 stable 上无意间允许（allowed）的 unstable feature。
+
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -573,6 +603,7 @@ error: use of unstable library feature 'test': `bench` is a part of custom test 
   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
   = note: for more information, see issue #64266 <https://github.com/rust-lang/rust/issues/64266>
 ```
+
 **解释**  
 
 [`bench`](https://doc.rust-lang.org/nightly/unstable-book/library-features/test.html) 属性意外地在 [stable release channel](https://doc.rust-lang.org/book/appendix-07-nightly-rust.html) 上被指定。将此转化为固有错误会破坏一些（现有）项目。当使用 `--cap-lints` 时该 lint 允许项目正确地构建，否则会发出一个错误提示。`#[bench]` 不应该被用在 stable channel。这是个[将来不兼容][future-incompatible] 的 lint ，将来会转化为固有错误。更多细节请参阅 [issue #64266](https://github.com/rust-lang/rust/issues/64266) 。
@@ -581,6 +612,7 @@ error: use of unstable library feature 'test': `bench` is a part of custom test 
 `unconditional_panic` lint 检测将在运行时引起 panic 的操作。
 
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -606,6 +638,7 @@ error: this operation will panic at runtime
 `unknown_crate_types` lint 检测在 [`crate_type`](https://doc.rust-lang.org/reference/linkage.html)属性中找到的未知 crate 类型。
 
 **样例**  
+
 ```rust
 #![crate_type="lol"]
 fn main() {}
@@ -620,6 +653,7 @@ error: invalid `crate_type` value
   |
   = note: `#[deny(unknown_crate_types)]` on by default
 ```
+
 **解释**  
 
 给 `crate_type` 属性赋未知值可以肯定说是一个错误。
@@ -628,6 +662,7 @@ error: invalid `crate_type` value
 `useless_deprecated` lint 检测无效且弃用的属性。
 
 **样例**  
+
 ```rust
 # #![allow(unused)]
 # fn main() {
@@ -651,7 +686,9 @@ error: this `#[deprecated]` annotation has no effect
   |
   = note: `#[deny(useless_deprecated)]` on by default
 ```
+
 **解释**  
+
 弃用属性对 trait 实现是无影响的。
 
 [future-incompatible]:https://doc.rust-lang.org/rustc/lints/index.html#future-incompatible-lints

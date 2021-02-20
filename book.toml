@@ -5,6 +5,10 @@ author = "The Rust Project Developers"
 translator = "1024chen"
 language = "zh-CN"
 
+[output.html]
+git-repository-url = "https://github.com/1024chen/irwa-cn"
+git-repository-icon = "fa-github"
+
 [output.html.playpen]
 editable = true
 editor = "ace"
