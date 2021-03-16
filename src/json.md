@@ -171,7 +171,7 @@ JSON 消息每行都被发送到 stderr 。
 
 ## 工件通知
 
-当使用 [`--json=artifacts` 标签][option-json] 时就会触发工件通知（ Artifact notification ，译者注，artifact 真的是一个很难恰到其处翻译的词语，所以这里只能约定俗称地翻译为“工件”） 。 它们指明了文件工件已经被保存到了磁盘中。有关发出（工件）类型的更多信息可以在 [`--emit` 标签][option-emit] 文档中找到。
+当使用 [`--json=artifacts` 标签][option-json] 时就会触发工件通知（ Artifact notification ，译者注，artifact 真的是一个很难恰到其处翻译的词语，所以这里只能约定俗成地翻译为“工件”） 。 它们指明了文件工件已经被保存到了磁盘中。有关发出（工件）类型的更多信息可以在 [`--emit` 标签][option-emit] 文档中找到。
 
 ```javascript
 {
