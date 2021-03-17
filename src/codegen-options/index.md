@@ -163,330 +163,248 @@
 
 ## linker-flavor
 
-This flag controls the linker flavor used by `rustc`. If a linker is given with
-the [`-C linker` flag](#linker), then the linker flavor is inferred from the
-value provided. If no linker is given then the linker flavor is used to
-determine the linker to use. Every `rustc` target defaults to some linker
-flavor. Valid options are:
+该标签控制 `rustc` 使用的链接器的样式。 如果给编译器附加 [`-C linker` 标签](#linker) ，那么链接器样式将从提供的值中推断出来。如果没有给出链接器，则会使用链接器样式来确定要使用的链接器。每个 `rustc` 目标都默认有一些链接器样式。有效的选项有：
 
-* `em`: use [Emscripten `emcc`](https://emscripten.org/docs/tools_reference/emcc.html).
-* `gcc`: use the `cc` executable, which is typically gcc or clang on many systems.
-* `ld`: use the `ld` executable.
-* `msvc`: use the `link.exe` executable from Microsoft Visual Studio MSVC.
-* `ptx-linker`: use
-  [`rust-ptx-linker`](https://github.com/denzp/rust-ptx-linker) for Nvidia
-  NVPTX GPGPU support.
-* `wasm-ld`: use the [`wasm-ld`](https://lld.llvm.org/WebAssembly.html)
-  executable, a port of LLVM `lld` for WebAssembly.
-* `ld64.lld`: use the LLVM `lld` executable with the [`-flavor darwin`
-  flag][lld-flavor] for Apple's `ld`.
-* `ld.lld`: use the LLVM `lld` executable with the [`-flavor gnu`
-  flag][lld-flavor] for GNU binutils' `ld`.
-* `lld-link`: use the LLVM `lld` executable with the [`-flavor link`
-  flag][lld-flavor] for Microsoft's `link.exe`.
+* `em`： 使用 [Emscripten `emcc`](https://emscripten.org/docs/tools_reference/emcc.html).
+* `gcc`： 使用 `cc` 可执行文件， 在许多系统上通常是 gcc 或 clang 。
+* `ld`： 使用 `ld` 可执行文件
+* `msvc`： 使用 Microsoft Visual Studio MSVC 的 `link.exe` 可执行文件。
+* `ptx-linker`: 使用 Nvidia NVPTX GPGPU 所支持的 [`rust-ptx-linker`](https://github.com/denzp/rust-ptx-linker) 。
+* `wasm-ld`： 使用可执行文件 [`wasm-ld`](https://lld.llvm.org/WebAssembly.html) ，
+   一个用于 WebAssembly 的 LLVM `lld` 端口。
+* `ld64.lld`： 对于 apple 的 `ld`，使用附加 [`-flavor darwin` 标签][lld-flavor] 的 LLVM `lld` 可执行文件。
+* `ld.lld`: 对于 GNU binutil 的 `ld`，使用附加 [`-flavor gnu` 标签][lld-flavor] 的 LLVM `lld` 可执行文件。
+* `lld-link`: 对于Microsoft 的 `link.exe`，使用附加 [`-flavor link` 标签][lld-flavor] 的 LLVM `lld` 可执行文件。
 
 [lld-flavor]: https://lld.llvm.org/Driver.html
 
 ## linker-plugin-lto
 
-This flag defers LTO optimizations to the linker. See
-[linker-plugin-LTO](../linker-plugin-lto.md) for more details. It takes one of
-the following values:
+该标签将 LTO 优化推迟到 链接器阶段。 更多细节请参阅 [linker-plugin-LTO](../linker-plugin-lto.md) 。 其采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: enable linker plugin LTO.
-* `n`, `no`, or `off`: disable linker plugin LTO (the default).
-* A path to the linker plugin.
+* `y`， `yes`， `on`， 或者无值：启用 linker plugin LTO 。
+* `n`， `no`， 或 `off`： 禁用 linker plugin LTO （默认）。
+* 一个链接器插件（ linker plugin ）的路径。
 
-More specifically this flag will cause the compiler to replace its typical
-object file output with LLVM bitcode files. For example an rlib produced with
-`-Clinker-plugin-lto` will still have `*.o` files in it, but they'll all be LLVM
-bitcode instead of actual machine code. It is expected that the native platform
-linker is capable of loading these LLVM bitcode files and generating code at
-link time (typically after performing optimizations).
+更具体地说，该标签将使得编译器将其通常的目标文件输出（ typical object file output ）替换为 LLVM 位码文件。 例如，使用 `-Clinker-plugin-lto` 生成的 rlib 会仍然有 `*.o` 文件在其中， 但实际上它们都是 LLVM 位码而非机器码。 预计本平台链接器可以加载这些 LLVM 位码文件并在链接时生成代码（通常在执行优化之后）。
 
-Note that rustc can also read its own object files produced with
-`-Clinker-plugin-lto`. If an rlib is only ever going to get used later with a
-`-Clto` compilation then you can pass `-Clinker-plugin-lto` to speed up
-compilation and avoid generating object files that aren't used.
+注意， rustc 也可以读取由 `-Clinker-plugin-lto` 生成的它自己的目标文件。如果 rlib 只会在使用 `-Clto` 编译时使用，那么可以传递 `-Clinker-plugin-lto` 标签来加速编译，并避免生成不使用的目标文件。
 
 ## llvm-args
 
-This flag can be used to pass a list of arguments directly to LLVM.
+该标签可以用来将参数列表直接传递给 LLVM 。
 
-The list must be separated by spaces.
+该列表必须用空格来分隔。
 
-Pass `--help` to see a list of options.
+传递 `--help` 来查看选项列表。
 
 ## lto
 
-This flag controls whether LLVM uses [link time
-optimizations](https://llvm.org/docs/LinkTimeOptimization.html) to produce
-better optimized code, using whole-program analysis, at the cost of longer
-linking time. It takes one of the following values:
+该标签控制是否 LLVM 用 [链接时间优化](https://llvm.org/docs/LinkTimeOptimization.html) 来产生更好的优化代码，使用完整的程序分析，以更长的链接时间为代价。其采用以下值之一：
 
-* `y`, `yes`, `on`, `fat`, or no value: perform "fat" LTO which attempts to
-  perform optimizations across all crates within the dependency graph.
-* `n`, `no`, `off`: disables LTO.
-* `thin`: perform ["thin"
-  LTO](http://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html).
-  This is similar to "fat", but takes substantially less time to run while
-  still achieving performance gains similar to "fat".
+* `y`， `yes`， `on`， `fat`， 或无值：执行 "fat" LTO ，即尝试将依赖图中的所有依赖跨 crate 执行优化。
+* `n`， `no`， `off`： 禁用 LTO 。
+* `thin`: 执行 ["thin" LTO](http://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html) 。这类似于 "fat" ，但会花费更少的时间（优化），同时仍然可以得到类似于 "fat" 的性能提升。
 
-If `-C lto` is not specified, then the compiler will attempt to perform "thin
-local LTO" which performs "thin" LTO on the local crate only across its
-[codegen units](#codegen-units). When `-C lto` is not specified, LTO is
-disabled if codegen units is 1 or optimizations are disabled ([`-C
-opt-level=0`](#opt-level)). That is:
+如果没有指定 `-C lto` ， 那么编译器就会尝试执行 "thin local LTO" ，即只在本地 crate 上跨其[代码生成单元](#codegen-units) 执行 "thin" LTO （which performs "thin" LTO on the local crate only across its [codegen units](#codegen-units) ）。 当未指定 `-C lto` 时，如果代码生成单元是 1 或优化被禁用（[`-C opt-level=0`](#opt-level)），则 LTO 将被禁用。即是：
 
-* When `-C lto` is not specified:
-  * `codegen-units=1`: disable LTO.
-  * `opt-level=0`: disable LTO.
-* When `-C lto=true`:
-  * `lto=true`: 16 codegen units, perform fat LTO across crates.
-  * `codegen-units=1` + `lto=true`: 1 codegen unit, fat LTO across crates.
+* 当 `-C lto` 未指定：
+  * `codegen-units=1`： 禁用 LTO 。
+  * `opt-level=0`： 禁用 LTO。
+* 当 `-C lto=true`：
+  * `lto=true`： 16 个代码生成单元， 跨 crate 执行 fat LTO 。
+  * `codegen-units=1` + `lto=true`： 1 个代码生成单元， 跨 crate 执行 fat LTO 。
 
-See also [linker-plugin-lto](#linker-plugin-lto) for cross-language LTO.
+跨语言 LTO 请参阅 [linker-plugin-lto](#linker-plugin-lto)。
 
 ## metadata
 
-This option allows you to control the metadata used for symbol mangling. This
-takes a space-separated list of strings. Mangled symbols will incorporate a
-hash of the metadata. This may be used, for example, to differentiate symbols
-between two different versions of the same crate being linked.
+该选项使你可以控制用于符号修饰（symbol mangling）。其采用值为以空格分隔的字符串列表。修饰后的符号将会合并元数据的 hash 。例如，这可以在链接时用来区分相同 crate 的两个不同版本之间符号。
 
 ## no-prepopulate-passes
 
-This flag tells the pass manager to use an empty list of passes, instead of the
-usual pre-populated list of passes.
+该标签告诉传递管理器（pass manager）使用一个空的传递列表而非通常的预填充了的传递列表。
 
 ## no-redzone
 
-This flag allows you to disable [the
-red zone](https://en.wikipedia.org/wiki/Red_zone_\(computing\)). It takes one
-of the following values:
+该标签允许你禁用 [the red zone](https://en.wikipedia.org/wiki/Red_zone_\(computing\)) 。 其采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: disable the red zone.
-* `n`, `no`, or `off`: enable the red zone.
+* `y`， `yes`， `on`，或无值：  禁用 the red zone 。
+* `n`， `no`， 或 `off`： 启用 the red zone 。
 
-The default behaviour, if the flag is not specified, depends on the target.
+如果该标签未指定，默认行为取决于目标系统。
 
 ## no-stack-check
 
-This option is deprecated and does nothing.
+该选项已被弃用，且不执行任何操作。
 
 ## no-vectorize-loops
 
-This flag disables [loop
-vectorization](https://llvm.org/docs/Vectorizers.html#the-loop-vectorizer).
+该标签禁用 [循环矢量化](https://llvm.org/docs/Vectorizers.html#the-loop-vectorizer)（ loop vectorization ）。
 
 ## no-vectorize-slp
 
-This flag disables vectorization using
-[superword-level
-parallelism](https://llvm.org/docs/Vectorizers.html#the-slp-vectorizer).
+该标签禁用矢量化使用 [superword-level parallelism](https://llvm.org/docs/Vectorizers.html#the-slp-vectorizer) 。
 
 ## opt-level
 
-This flag controls the optimization level.
+该标签控制优化级别。
 
-* `0`: no optimizations, also turns on
-  [`cfg(debug_assertions)`](#debug-assertions) (the default).
-* `1`: basic optimizations.
-* `2`: some optimizations.
-* `3`: all optimizations.
-* `s`: optimize for binary size.
-* `z`: optimize for binary size, but also turn off loop vectorization.
+* `0`： 没有优化，同时打开 [`cfg(debug_assertions)`](#debug-assertions)（默认值）。
+* `1`：基本的优化（basic optimizations）。
+* `2`：一些优化（some optimizations）。
+* `3`： 全部优化（all optimizations）。
+* `s`：优化二进制大小（optimize for binary size）。
+* `z`：优化二进制大小，同时关闭循环矢量化。
 
-Note: The [`-O` flag][option-o-optimize] is an alias for `-C opt-level=2`.
+注意： [`-O` 标签][option-o-optimize] 是 `-C opt-level=2` 的一个别名。
 
-The default is `0`.
+默认值为 `0`。
 
 ## overflow-checks
 
-This flag allows you to control the behavior of [runtime integer
-overflow](../../reference/expressions/operator-expr.md#overflow). When
-overflow-checks are enabled, a panic will occur on overflow. This flag takes
-one of the following values:
+该标签允许你控制 [运行时整数溢出](https://doc.rust-lang.org/reference/expressions/operator-expr.html#overflow)的行为。当 overflow-checks 被启用时，溢出时会发出一个 panic 。该标签采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: enable overflow checks.
-* `n`, `no`, or `off`: disable overflow checks.
+* `y`， `yes`， `on`， 或无值：开启 overflow checks 。
+* `n`， `no`， or `off`： 禁用 overflow checks 。
 
-If not specified, overflow checks are enabled if
-[debug-assertions](#debug-assertions) are enabled, disabled otherwise.
+倘若未指定 overflow checks，如果 [debug-assertions](#debug-assertions) 是启用的 overflow checks 才会启用，否则是禁用的。
 
 ## panic
 
-This option lets you control what happens when the code panics.
+该标签使你在代码 panic 时控制（程序栈）行为情况。
 
-* `abort`: terminate the process upon panic
-* `unwind`: unwind the stack upon panic
+* `abort`：在 panic 时终止进程。
+* `unwind`：在 panic 时对栈进行展开。
 
-If not specified, the default depends on the target.
+如果未指定，默认值取决于目标。
 
 ## passes
 
-This flag can be used to add extra [LLVM
-passes](http://llvm.org/docs/Passes.html) to the compilation.
+该标签可以用于添加额外的 [LLVM passes](http://llvm.org/docs/Passes.html) 到编译中。
 
-The list must be separated by spaces.
+列表必须以空格分隔。
 
-See also the [`no-prepopulate-passes`](#no-prepopulate-passes) flag.
+另请参阅 [`no-prepopulate-passes`](#no-prepopulate-passes) 标签。
 
 ## prefer-dynamic
 
-By default, `rustc` prefers to statically link dependencies. This option will
-indicate that dynamic linking should be used if possible if both a static and
-dynamic versions of a library are available. There is an internal algorithm
-for determining whether or not it is possible to statically or dynamically
-link with a dependency. For example, `cdylib` crate types may only use static
-linkage. This flag takes one of the following values:
+默认情况下，`rustc` 更倾向于静态链接依赖项。该选项表明，如果库的静态和动态版本都是可用的，则应尽可能使用动态链接。有一个内部算法用于确定是否可以静态或动摇地链接依赖项。例如， `cdylib` crate 类型只能使用静态链接。该标采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: use dynamic linking.
-* `n`, `no`, or `off`: use static linking (the default).
+* `y`， `yes`， `on`， 或无值： 使用动态链接。
+* `n`， `no`， 或 `off`： 使用静态链接（默认值）。
 
 ## profile-generate
 
-This flag allows for creating instrumented binaries that will collect
-profiling data for use with profile-guided optimization (PGO). The flag takes
-an optional argument which is the path to a directory into which the
-instrumented binary will emit the collected data. See the chapter on
-[profile-guided optimization] for more information.
+该标签允许创建用于收集分析数据的仪器化二进制文件（instrumented binaries），用于 PGO 。该标签采用一个可选参数，该参数是一个目录的路径，仪器化二进制文件将会把收集到的数据发送到该目录中。更多信息请参阅 [PGO][profile-guided optimization] 章节。
 
 ## profile-use
 
-This flag specifies the profiling data file to be used for profile-guided
-optimization (PGO). The flag takes a mandatory argument which is the path
-to a valid `.profdata` file. See the chapter on
-[profile-guided optimization] for more information.
+该标签指定用于 PGO 的分析数据文件。该标签采用一个强制参数，它是一个有效的 `.profdata` 文件的路径。更多信息请参阅 [PGO][profile-guided optimization] 章节。
 
 ## relocation-model
 
-This option controls generation of
-[position-independent code (PIC)](https://en.wikipedia.org/wiki/Position-independent_code).
+该选项控制 [地址无关代码 (PIC)](https://en.wikipedia.org/wiki/Position-independent_code) 的生成。
 
-Supported values for this option are:
+该选项支持的值有：
 
 #### Primary relocation models
 
-- `static` - non-relocatable code, machine instructions may use absolute addressing modes.
+- `static` - 不可重定位代码，机器指令得使用绝对寻址模式。
 
-- `pic` - fully relocatable position independent code,
-machine instructions need to use relative addressing modes.  \
-Equivalent to the "uppercase" `-fPIC` or `-fPIE` options in other compilers,
-depending on the produced crate types.  \
-This is the default model for majority of supported targets.
+- `pic` - 完全可重定位独立代码，机器指令需要使用相对寻址模式。  \
+等效于在其它编译器 “大写” `-fPIC` 或 `-fPIE` 选项，取决于产生的 crate 类型。  \
+这是大多数受支持目标的默认 model。
 
 #### Special relocation models
 
-- `dynamic-no-pic` - relocatable external references, non-relocatable code.  \
-Only makes sense on Darwin and is rarely used.  \
-If StackOverflow tells you to use this as an opt-out of PIC or PIE, don't believe it,
-use `-C relocation-model=static` instead.
-- `ropi`, `rwpi` and `ropi-rwpi` - relocatable code and read-only data, relocatable read-write data,
-and combination of both, respectively.  \
-Only makes sense for certain embedded ARM targets.
-- `default` - relocation model default to the current target.  \
-Only makes sense as an override for some other explicitly specified relocation model
-previously set on the command line.
+- `dynamic-no-pic` - 可重定位外部引用，不可重定位代码。  \
+仅对 Darwin 操作系统有用，并且很少使用  \
+如果 StackOverflow 告诉你将其作为 PIC 或 PIE 的退出选项， 不要相信它，应该使用 `-C relocation-model=static` 。
+- `ropi`， `rwpi` 和 `ropi-rwpi` - 可重定位代码和只读数据， 可重定位的读写数据，
+以及两者的组合。  \
+只对特定的 嵌入式 ARM 目标有意义。.
+- `default` -重定位默认模型到当前目标  \
+仅有的意义是作为对先前在命令行上设置的其他一些明确指定的重定位模型的替代。
 
-Supported values can also be discovered by running `rustc --print relocation-models`.
+也可以通过运行 `rustc --print relocation-models` 查找支持的值。
 
 #### Linking effects
 
-In addition to codegen effects, `relocation-model` has effects during linking.
+除了代码生成效果之外， `relocation-model` 在链接期间也有效果。
 
-If the relocation model is `pic` and the current target supports position-independent executables
-(PIE), the linker will be instructed (`-pie`) to produce one.  \
-If the target doesn't support both position-independent and statically linked executables,
-then `-C target-feature=+crt-static` "wins" over `-C relocation-model=pic`,
-and the linker is instructed (`-static`) to produce a statically linked
-but not position-independent executable.
+如果重定位模型是 `pic` ，并且当前目标支持地址无关可执行文件（PIE），则将指示链接器生成一个（地址无关可执行文件）。  \
+如果目标不支持地址无关且静态链接的可执行文件，那么 `-C target-feature=+crt-static` 会“超过” `-C relocation-model=pic`，并指示链接器（`-static`）生成静态链接但不是地址无关的可执行文件。
 
 ## remark
 
-This flag lets you print remarks for optimization passes.
+该标签允许你打印优化传递命令的备注。
 
-The list of passes should be separated by spaces.
+传递命令的列表应该用空格分隔。
 
-`all` will remark on every pass.
+（如果是）`all` 将会对每个传递命令备注。
 
 ## rpath
 
-This flag controls whether [`rpath`](https://en.wikipedia.org/wiki/Rpath) is
-enabled. It takes one of the following values:
+该标签控制是否启用 [`rpath`](https://en.wikipedia.org/wiki/Rpath) 。其采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: enable rpath.
-* `n`, `no`, or `off`: disable rpath (the default).
+* `y`， `yes`， `on`， 或者无值： 启用 rpath 。
+* `n`， `no`， 或 `off`： 禁用 rpath （默认值）。
 
 ## save-temps
 
-This flag controls whether temporary files generated during compilation are
-deleted once compilation finishes. It takes one of the following values:
+该标签控制在编译完成后是否删除编译过程中生成的临时文件。其采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: save temporary files.
-* `n`, `no`, or `off`: delete temporary files (the default).
+* `y`， `yes`， `on`， 或者无值：保存临时文件。
+* `n`， `no`， 或 `off`：删除临时文件（默认值）。
 
 ## soft-float
 
-This option controls whether `rustc` generates code that emulates floating
-point instructions in software. It takes one of the following values:
+该选项控制是否 `rustc` 生成模拟软件中浮点指令的代码。其采用以下值之一：
 
-* `y`, `yes`, `on`, or no value: use soft floats.
-* `n`, `no`, or `off`: use hardware floats (the default).
+* `y`， `yes`， `on`， 或者无值： 使用软浮点数。
+* `n`， `no`， 或 `off`： 使用硬件浮点数（默认值）。
 
 ## target-cpu
 
-This instructs `rustc` to generate code specifically for a particular processor.
+这会指示 `rustc` 生成专用于特定处理器的代码。
 
-You can run `rustc --print target-cpus` to see the valid options to pass
-here. Each target has a default base CPU. Special values include:
+你可以运行 `rustc --print target-cpus` 来查看此处有效的传递选项。每个目标都有一个默认的基础 CPU 。 特殊值包括：
 
-* `native` can be passed to use the processor of the host machine. 
-* `generic` refers to an LLVM target with minimal features but modern tuning.
+* `native` 可以传递给使用该主机处理器（同样的机器）。
+* `generic` 指具有最少的 features 但经过现代调优的一个 LLVM 目标。
 
 ## target-feature
 
-Individual targets will support different features; this flag lets you control
-enabling or disabling a feature. Each feature should be prefixed with a `+` to
-enable it or `-` to disable it.
+各个目标会支持不同的 features ； 该标签使你可以控制启用或禁用 feature 。 每个 feature 应该以一个 `+` 或 `-` 来做前缀来启用或禁用 feature 。
 
-Features from multiple `-C target-feature` options are combined. \
-Multiple features can be specified in a single option by separating them
-with commas - `-C target-feature=+x,-y`. \
-If some feature is specified more than once with both `+` and `-`,
-then values passed later override values passed earlier. \
-For example, `-C target-feature=+x,-y,+z -Ctarget-feature=-x,+y`
-is equivalent to `-C target-feature=-x,+y,+z`.
+多个 features 通过 `-C target-feature` 选项的是可组合的。 \
+多个 features 可以在单个选项中使用逗号分隔符指定—— `-C target-feature=+x,-y`。 \
+如果某些 feature 同时使用 `+` 和 `-` 指定了一次或多次，那么后面传递的值会覆盖前面传递的值。 \
+例如， `-C target-feature=+x,-y,+z -Ctarget-feature=-x,+y`
+等价于 `-C target-feature=-x,+y,+z`.
 
-To see the valid options and an example of use, run `rustc --print
-target-features`.
+要查看有效的选项和使用示例，请运行 `rustc --print
+target-features`。
 
-Using this flag is unsafe and might result in [undefined runtime
-behavior](../targets/known-issues.md).
+使用该标签是不安全的，可能会导致 [未定义的运行时行为](../targets/known-issues.md).
 
-See also the [`target_feature`
-attribute](../../reference/attributes/codegen.md#the-target_feature-attribute)
-for controlling features per-function.
+同样请参阅 [`target_feature` attribute](../../reference/attributes/codegen.md#the-target_feature-attribute) 控制每个函数的 features 。
 
-This also supports the feature `+crt-static` and `-crt-static` to control
-[static C runtime linkage](../../reference/linkage.html#static-and-dynamic-c-runtimes).
+这也支持 `+crt-static` 和 `-crt-static` feature 来控制
+[静态 C 运行时链接](../../reference/linkage.html#static-and-dynamic-c-runtimes).
 
-Each target and [`target-cpu`](#target-cpu) has a default set of enabled
-features.
+每个 target 和 [`target-cpu`](#target-cpu) 都有一组默认启用的 features 。
 
 ## tune-cpu
 
-This instructs `rustc` to schedule code specifically for a particular
-processor. This does not affect the compatibility (instruction sets or ABI),
-but should make your code slightly more efficient on the selected CPU.
+这会指示 `rustc` 为特定处理器调度代码。这不会影响兼容性（指令集或 ABI），但应该会使得代码在所选定的 CPU 上更有效率。
 
-The valid options are the same as those for [`target-cpu`](#target-cpu).
-The default is `None`, which LLVM translates as the `target-cpu`.
+有效的选项与 [`target-cpu`](#target-cpu) 的相同。默认值为 `None`，  LLVM 将其转化为 `target-cpu` 。
 
-This is an unstable option. Use `-Z tune-cpu=machine` to specify a value.
+这是个不稳定的选项。使用 `-Z tune-cpu=machine` 来指定值。
 
-Due to limitations in LLVM (12.0.0-git9218f92), this option is currently
-effective only for x86 targets.
+由于 LLVM （12.0.0-git9218f92）的限制，此选项当前仅针对 x86 目标有效。
 
 [option-emit]: ../command-line-arguments.md#option-emit
 [option-o-optimize]: ../command-line-arguments.md#option-o-optimize
